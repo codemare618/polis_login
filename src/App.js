@@ -10,23 +10,28 @@ import ResetPassConfirm from "./views/resetPasswordConfirm";
 import Layout from "./hocs/layout";
 
 import {Provider} from "react-redux";
-import store from "./store";
+import store, {persistor} from "./store";
+import {PersistGate} from 'redux-persist/integration/react';
 
-const App = () => (
-    <Provider store={store}>
-    <Router>
-        <Layout>
-            <Switch>
-                <Route exact path='/' component={Home} />
-                <Route exact path='/login' component={Login} />
-                <Route exact path='/signup' component={Singup} />
-                <Route exact path='/reset-password' component={ResetPass} />
-                <Route exact path='/password/reset/confirm/:uid/:token' component={ResetPassConfirm} />
-                <Route exact path='/activate/:uid/:token' component={Activate} />
-            </Switch>
-        </Layout>
-    </Router>
-    </Provider>
-);
+import credentialStorage from "./utils/PolisCredentialStorage";
+import {getUserInfo, refreshToken} from "./service/polis";
+import {USER_LOADED_SUCCESS} from "./actions/types";
+
+
+const App = () => {
+    return (
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <Router>
+                    <Layout>
+                        <Switch>
+                            <Route exact path='/' component={Home}/>
+                        </Switch>
+                    </Layout>
+                </Router>
+            </PersistGate>
+        </Provider>
+    )
+}
 
 export default App;

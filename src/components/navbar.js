@@ -1,21 +1,35 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import img_arthology_logo from "../static/images/arthology_logo.svg"
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {logout} from "../actions/auth";
+import {startAuthorization} from "../service/polis";
 
-const Navbar = ({ logout, isAuthenticated }) => {
+const Navbar = ({logout, isAuthenticated, user}) => {
+    const onPressLogin = (evt) => {
+        evt.preventDefault();
+        startAuthorization();
+    }
+    console.log(user);
     const guestLinks = () => (
         <Fragment>
             <span><Link className="btn btn-secondary" to={'/signup'} role="button">Create Account</Link></span>
-            <span><Link className="btn btn-outline-secondary ms-2" to={'/login'}
-                        role="button">Login</Link></span>
+            <span><a className="btn btn-outline-secondary ms-2" onClick={onPressLogin} href={'#'}
+                     role="button">Login</a></span>
         </Fragment>
     );
     const authLinks = () => (
         <div>
-        <span></span>
-        <span><a className="btn btn-outline-secondary" href='#!' role="button" onClick={logout}>Logout</a></span>
+            <div style={{display: 'inline'}}>
+                <span>{
+                    user && user.display_name
+                }</span>
+                <br/>
+                <span>{
+                    user && user.eth_address
+                }</span>
+            </div>
+            <span><a className="btn btn-outline-secondary" href='#!' role="button" onClick={logout}>Logout</a></span>
         </div>
     );
 
@@ -51,8 +65,18 @@ const Navbar = ({ logout, isAuthenticated }) => {
 
 };
 
-const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-});
+const mapStateToProps = state => (
+    {
+        isAuthenticated: state.auth.isAuthenticated,
+        user
+    :
+    state.auth.user
+}
+)
+;
 
-export default connect(mapStateToProps, {logout})(Navbar);
+export default connect(mapStateToProps,
+    {
+        logout
+    }
+)(Navbar);

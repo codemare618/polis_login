@@ -5,10 +5,12 @@ import {checkAuthenticaded, load_user} from "../actions/auth";
 
 const Layout = (props) => {
 
+    /*
     useEffect(() => {
         props.checkAuthenticaded();
         props.load_user();
     }, []);
+    */
 
     return (
         <div>
